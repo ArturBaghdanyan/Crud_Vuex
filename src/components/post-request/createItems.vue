@@ -25,31 +25,43 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("main", ["posts", 'error', "createShowItem"])
+    ...mapGetters("main", ["posts", "createShowItem", "error"])
   },
   methods: {
-      ...mapActions("main", ["createItem"]),
+      ...mapActions("main", ["fetchPosts"]),
 
-    handleCreatePost() {
+    async handleCreatePost() {
+      const newId = this.posts.length ? Math.max(...this.posts.map(item => item.id)) + 1 : 101
 
       const newPost = {
+        id: newId,
         title: this.titleValue,
-        body: this.bodyValue
+        body: this.bodyValue,
       };
 
-      createPost(newPost).then(() => {
+      try {
+        const postItem = await createPost(newPost);
+
+        if (postItem) {
+          const updatedPosts = [...this.posts, newPost];
+
+          this.$store.dispatch("main/fetchPosts", updatedPosts);
+
+          this.titleValue = "";
+          this.bodyValue = "";
+        }
+
         this.$store.dispatch("main/setShowDataList", {
           key: "createShowItem",
-          value: !this.createShowItem
+          value: !this.createShowItem,
         });
-        this.titleValue = "";
-        this.bodyValue = "";
 
-      }).catch(error => {
-        this.$store.dispatch("main/handleError", error)
-          console.error("Failed to create post:", error);
-        })
+      } catch (error) {
+        this.$store.dispatch("main/handleError", error || "Failed to create post");
+        console.error("Failed to create post:", error);
+      }
     }
+
   }
 }
 </script>

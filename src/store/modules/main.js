@@ -35,15 +35,6 @@ export default {
     fetchPosts({ commit }, posts) {
       commit("SET_POSTS", posts);
     },
-    createItem({ commit }, posts) {
-      commit("SET_POSTS", posts);
-    },
-    updateItem({ commit }, posts) {
-      commit("SET_POSTS", posts);
-    },
-    deleteItem({ commit }, posts) {
-      commit("SET_POSTS", posts)
-    },
     isLoading({ commit }, payload) {
       commit("SET_LOADING", payload);
     },

@@ -28,7 +28,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("main", ["updateItem"]),
+    ...mapActions("main", ["fetchPosts"]),
 
     async updatePostData() {
       // console.log(this.selectedPost, 'selectedPost')
@@ -39,12 +39,12 @@ export default {
         body: this.updatedBody,
       }
 
-      console.log(updatedPost.id, 'id')//undefined
+      console.log(updatedPost.id, 'id') //undefined
 
       try {
         await updatePost(updatedPost);
 
-        this.$store.dispatch("main/updateItem", updatedPost)
+        this.$store.dispatch("main/fetchPosts", updatedPost)
 
         this.$store.dispatch("main/setUpdateVisible", {
           key: 'updateVisible', value: true

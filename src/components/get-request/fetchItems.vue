@@ -86,13 +86,9 @@ export default {
 
         console.log("Deleting post with ID:", postId);
 
-        const response = await deletePost(postId);
-
-        if (response && response.status === 200) {
-          this.posts = this.posts.filter(post => post.id !== postId);
-
-          this.$store.dispatch('main/deleteItem', postId);
-        }
+       const response = await deletePost(postId);
+       console.log(response)
+       this.$store.dispatch('main/fetchPosts', this.posts.filter(post => post.id !== postId));
 
         this.$store.dispatch('main/setShowDataList', {
           key: 'showDataList', value: !this.selectedPost
@@ -107,9 +103,9 @@ export default {
   created() {
     this.showData()
   },
-  destroyed() {
-    this.removeItem()
-  }
+  // destroyed() {
+  //   this.removeItem()
+  // }
 }
 
 </script>
