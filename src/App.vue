@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import FetchItems from "@/components/get-request/fetchItems.vue";
-import CreatePost from "@/components/post-request/createItems.vue";
 import { mapActions, mapGetters } from "vuex";
+import FetchItems from "@/components/get-request/FetchItems.vue";
+import CreatePost from "@/components/post-request/CreateItems.vue";
 
 export default {
   name: "App",
@@ -38,13 +38,10 @@ export default {
     ...mapActions("main", ['fetchPosts']),
 
     showData() {
-      this.$store.dispatch(
-          'main/setShowDataList',
-          { key: 'showDataList', value: !this.showDataList});
+      this.$store.dispatch('main/setShowDataList', { key: 'showDataList', value: !this.showDataList});
     },
     openModal() {
-      this.$store.dispatch("main/setShowDataList",
-          { key: 'createShowItem', value: !this.createShowItem });
+      this.$store.dispatch("main/setShowDataList", { key: 'createShowItem', value: !this.createShowItem });
     }
   },
 }

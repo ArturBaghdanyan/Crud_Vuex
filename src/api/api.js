@@ -2,14 +2,10 @@ import request from "../helpers/fetch.js";
 
 export const getList = async () => {
   try {
-    const response = await request('/posts', { method: 'GET' });
-    console.log('API Response:', response);
+    return await request('/posts', { method: 'GET' });
 
-    return response
   } catch(error) {
     console.log('response is not defined', error)
-  } finally {
-    console.log('finally')
   }
 };
 
@@ -22,13 +18,11 @@ export const createPost = async (newPost) => {
         body: newPost.body,
       },
     });
-
     if (!response) {
       throw new Error("No response from server");
     }
-
-    console.log("Item Created:", response);
     return response;
+
   } catch (error) {
     console.error("Error creating post:", error);
     throw error;
@@ -58,7 +52,6 @@ export const deletePost = async (postId) => {
     if (!response) {
       throw new Error("No response from server");
     }
-
     return response;
 
   } catch(error) {

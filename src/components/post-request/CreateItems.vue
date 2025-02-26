@@ -38,6 +38,7 @@ export default {
         title: this.titleValue,
         body: this.bodyValue,
       };
+      console.log(newPost, 'newPost')
 
       try {
         const postItem = await createPost(newPost);
@@ -50,18 +51,16 @@ export default {
           this.titleValue = "";
           this.bodyValue = "";
         }
-
         this.$store.dispatch("main/setShowDataList", {
           key: "createShowItem",
           value: !this.createShowItem,
         });
 
       } catch (error) {
-        this.$store.dispatch("main/handleError", error || "Failed to create post");
+        this.$store.dispatch("main/handleError", error);
         console.error("Failed to create post:", error);
       }
     }
-
   }
 }
 </script>

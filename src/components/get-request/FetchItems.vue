@@ -21,7 +21,7 @@
           <button @click="toggleEdit(post)">Edit</button>
         </td>
         <td>
-          <button @click="removeItem(post.id)">Delete</button>
+          <DeleteItem :post="post" />
         </td>
       </tr>
     </tbody>
@@ -36,12 +36,13 @@
 <script>
 import '../../assets/css/base.css';
 import { mapActions, mapGetters } from "vuex";
-import UpdateItems from "../put-request/updateItems.vue";
-import { deletePost, getList } from "@/api/api.js";
+import { getList } from "@/api/api.js";
+import UpdateItems from "../put-request/UpdateItems.vue";
+import DeleteItem from "@/components/delete-request/DeleteItem.vue";
 
 export default {
   name: 'FetchItems',
-  components: { UpdateItems },
+  components: { UpdateItems, DeleteItem },
 
   computed: {
     ...mapGetters('main', ['posts', 'error', 'loading', 'updateVisible']),
@@ -56,14 +57,7 @@ export default {
 
         const response = await getList();
 
-        if (response) {
-          this.$store.dispatch('main/fetchPosts', response);
-          this.$store.dispatch('main/setShowDataList', {
-            key: 'showDataList', value: true
-          });
-        } else {
-          console.error("No data received from API.");
-        }
+        response ? this.$store.dispatch('main/fetchPosts', response) : 'No data received from API';
 
         this.$store.dispatch('main/isLoading', { key: 'loading', value: false });
       } catch (error) {
@@ -77,24 +71,7 @@ export default {
       this.$store.dispatch("main/setUpdateVisible", { key: "updateVisible", value: true });
     },
 
-     async removeItem(postId) {
-       try {
 
-        console.log("Deleting post with ID:", postId);
-
-       const response = await deletePost(postId);
-       console.log(response)
-       this.$store.dispatch('main/fetchPosts', this.posts.filter(post => post.id !== postId));
-
-        this.$store.dispatch('main/setShowDataList', {
-          key: 'showDataList', value: !this.selectedPost
-        });
-
-      } catch (error) {
-        console.error("Error deleting post:", error);
-        this.$store.dispatch('main/handleError', true);
-      }
-     }
   },
   created() {
     this.showData()

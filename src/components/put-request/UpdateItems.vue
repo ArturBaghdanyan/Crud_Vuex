@@ -12,7 +12,7 @@
 <script>
 import '../../assets/css/repeated.css';
 import {mapActions, mapGetters, mapState} from "vuex";
-import {updatePost} from "@/api/api.js";
+import { updatePost } from "@/api/api.js";
 
 export default {
   name: "UpdateItems",
@@ -23,12 +23,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("main", ['error', 'selectedPost', 'updateVisible']),
+    ...mapGetters("main", ['error', 'selectedPost', 'updateVisible', 'showDataList']),
     ...mapState("main", ["posts"]),
   },
 
   methods: {
-    ...mapActions("main", ["fetchPosts", "setSelectedPost"]),
+    ...mapActions("main", ["fetchPosts", "setSelectedPost", "setShowDataList"]),
 
     async updatePostData() {
 
@@ -43,18 +43,25 @@ export default {
 
         if(update) {
           const index = this.posts.findIndex(post => post.id === updatedPost.id);
-          console.log(index, 'find index')
 
           if (index !== -1) {
             const updatedPosts = [...this.posts];
             updatedPosts.splice(index, 1, updatedPost);
             this.$store.dispatch("main/fetchPosts", updatedPosts);
           }
+          console.log('ID:', index, 'updated item')
+
+          // this.$store.dispatch('main/setShowDataList', {
+          //   key: 'showDataList', value: true
+          // });
         }
 
         this.$store.dispatch("main/setUpdateVisible", {
           key: 'updateVisible', value: false
         })
+        this.$store.dispatch('main/setShowDataList', {
+          key: 'showDataList', value: true
+        });
 
         this.updatedTitle = "";
         this.updatedBody = "";

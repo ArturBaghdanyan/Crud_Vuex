@@ -50,8 +50,8 @@ export default {
     setUpdateVisible({ commit }, payload) {
       commit('SET_UPDATE_VISIBLE', payload);
     },
-    setSelectedPost({ commit }, post) {
-      commit('SET_SELECTED_POST', post)
+    setSelectedPost({ commit }, payload) {
+      commit('SET_SELECTED_POST', payload)
     }
   },
 
