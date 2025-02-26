@@ -11,12 +11,11 @@
 
 <script>
 import '../../assets/css/repeated.css';
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 import {updatePost} from "@/api/api.js";
 
 export default {
   name: "UpdateItems",
-
   data() {
     return {
       updatedTitle: '',
@@ -24,14 +23,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("main", ['error', 'selectedPost', 'updateVisible'])
+    ...mapGetters("main", ['error', 'selectedPost', 'updateVisible']),
+    ...mapState("main", ["posts"]),
   },
 
   methods: {
-    ...mapActions("main", ["fetchPosts"]),
+    ...mapActions("main", ["fetchPosts", "setSelectedPost"]),
 
     async updatePostData() {
-      // console.log(this.selectedPost, 'selectedPost')
 
       const updatedPost = {
         id: this.selectedPost.id,
@@ -39,24 +38,23 @@ export default {
         body: this.updatedBody,
       }
 
-      console.log(updatedPost.id, 'id') //undefined
-
       try {
-        await updatePost(updatedPost);
+        const update = await updatePost(updatedPost);
 
-        this.$store.dispatch("main/fetchPosts", updatedPost)
+        if(update) {
+          const index = this.posts.findIndex(post => post.id === updatedPost.id);
+          console.log(index, 'find index')
 
-        this.$store.dispatch("main/setUpdateVisible", {
-          key: 'updateVisible', value: true
-        })
-        const index = this.posts.findIndex(post => post.id === updatedPost.id);
-        console.log(index, 'find index')
-
-        if (index !== -1) {
-          this.posts.splice(index, 1, updatedPost);
+          if (index !== -1) {
+            const updatedPosts = [...this.posts];
+            updatedPosts.splice(index, 1, updatedPost);
+            this.$store.dispatch("main/fetchPosts", updatedPosts);
+          }
         }
 
-        this.$store.dispatch('main/setUpdateVisible', false);
+        this.$store.dispatch("main/setUpdateVisible", {
+          key: 'updateVisible', value: false
+        })
 
         this.updatedTitle = "";
         this.updatedBody = "";
@@ -68,11 +66,11 @@ export default {
     },
 
   cancelUpdate() {
-    this.updatedTitle = '';
-    this.updatedBody = '';
     this.$store.dispatch('main/setUpdateVisible', {
       key: 'updateVisible', value: false
     });
+    this.updatedTitle = '';
+    this.updatedBody = '';
   },
   }
 }

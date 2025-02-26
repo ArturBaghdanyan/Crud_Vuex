@@ -18,7 +18,7 @@
         <td>{{ post.title }}</td>
         <td>{{ post.body }}</td>
         <td>
-          <button @click="toggleEdit(post.id)">Edit</button>
+          <button @click="toggleEdit(post)">Edit</button>
         </td>
         <td>
           <button @click="removeItem(post.id)">Delete</button>
@@ -27,27 +27,27 @@
     </tbody>
   </table>
   </div>
-<!--    <div v-if="showDataList">-->
-<!--      <UpdateItems />-->
-<!--    </div>-->
+    <div v-if="updateVisible">
+      <UpdateItems />
+    </div>
   </div>
 </template>
 
 <script>
 import '../../assets/css/base.css';
 import { mapActions, mapGetters } from "vuex";
-// import UpdateItems from "../put-request/updateItems.vue";
+import UpdateItems from "../put-request/updateItems.vue";
 import { deletePost, getList } from "@/api/api.js";
 
 export default {
   name: 'FetchItems',
-  // components: { UpdateItems },
+  components: { UpdateItems },
 
   computed: {
-    ...mapGetters('main', ['posts', 'error', 'loading', 'showDataList', 'selectedPost']),
+    ...mapGetters('main', ['posts', 'error', 'loading', 'updateVisible']),
   },
   methods: {
-    ...mapActions('main', ['fetchPosts']),
+    ...mapActions('main', ['fetchPosts', 'setSelectedPost', 'setShowDataList']),
 
     async showData() {
       try {
@@ -72,13 +72,9 @@ export default {
       }
     },
 
-    toggleEdit(postId) {
-      this.$store.dispatch('main/setShowDataList', {
-        key: 'showDataList', value: true
-      });
-      this.$store.dispatch('main/setShowDataList', {
-        key: 'selectedPost', value: postId
-      });
+    toggleEdit(post) {
+      this.setSelectedPost(post)
+      this.$store.dispatch("main/setUpdateVisible", { key: "updateVisible", value: true });
     },
 
      async removeItem(postId) {
@@ -103,9 +99,6 @@ export default {
   created() {
     this.showData()
   },
-  // destroyed() {
-  //   this.removeItem()
-  // }
 }
 
 </script>

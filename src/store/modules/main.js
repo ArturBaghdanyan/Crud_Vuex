@@ -29,6 +29,9 @@ export default {
     SET_UPDATE_VISIBLE(state, payload) {
       state.dialogs[payload.key] = payload.value;
     },
+    SET_SELECTED_POST(state, post) {
+      state.selectedPost = post;
+    },
   },
 
   actions: {
@@ -47,6 +50,9 @@ export default {
     setUpdateVisible({ commit }, payload) {
       commit('SET_UPDATE_VISIBLE', payload);
     },
+    setSelectedPost({ commit }, post) {
+      commit('SET_SELECTED_POST', post)
+    }
   },
 
   getters: {
