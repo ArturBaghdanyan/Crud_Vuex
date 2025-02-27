@@ -28,7 +28,7 @@ export default {
   },
 
   methods: {
-    ...mapActions("main", ["fetchPosts", "setSelectedPost", "setShowDataList"]),
+    ...mapActions("main", ["fetchPosts", "setSelectedPost", "setShowDataList", "setUpdateVisible"]),
 
     async updatePostData() {
 
@@ -50,15 +50,12 @@ export default {
             this.$store.dispatch("main/fetchPosts", updatedPosts);
           }
           console.log('ID:', index, 'updated item')
-
-          // this.$store.dispatch('main/setShowDataList', {
-          //   key: 'showDataList', value: true
-          // });
         }
 
         this.$store.dispatch("main/setUpdateVisible", {
           key: 'updateVisible', value: false
-        })
+        });
+
         this.$store.dispatch('main/setShowDataList', {
           key: 'showDataList', value: true
         });

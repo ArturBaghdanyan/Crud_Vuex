@@ -5,7 +5,6 @@
       <input type="text" placeholder="Enter a body" v-model="bodyValue" />
       <button type="submit">Add Post</button>
     </form>
-    <p v-if="error">Failed to create post.</p>
   </div>
 </template>
 
@@ -38,6 +37,7 @@ export default {
         title: this.titleValue,
         body: this.bodyValue,
       };
+
       console.log(newPost, 'newPost')
 
       try {

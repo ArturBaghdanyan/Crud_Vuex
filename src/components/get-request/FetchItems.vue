@@ -43,9 +43,8 @@ import DeleteItem from "@/components/delete-request/DeleteItem.vue";
 export default {
   name: 'FetchItems',
   components: { UpdateItems, DeleteItem },
-
   computed: {
-    ...mapGetters('main', ['posts', 'error', 'loading', 'updateVisible']),
+    ...mapGetters('main', ['posts', 'error', 'loading', 'showDataList', 'updateVisible']),
   },
   methods: {
     ...mapActions('main', ['fetchPosts', 'setSelectedPost', 'setShowDataList']),
@@ -53,15 +52,20 @@ export default {
     async showData() {
       try {
         this.$store.dispatch('main/isLoading', { key: 'loading', value: true });
-        this.$store.dispatch('main/handleError', { key: 'error', value: false });
+        this.$store.dispatch('main/handleError', { key: 'error', value: false })
 
         const response = await getList();
 
-        response ? this.$store.dispatch('main/fetchPosts', response) : 'No data received from API';
+        if (response && response.length) {
+          this.$store.dispatch('main/fetchPosts', response);
+        } else {
+          throw new Error("No data received from API");
+        }
 
         this.$store.dispatch('main/isLoading', { key: 'loading', value: false });
       } catch (error) {
         console.error("Error fetching posts:", error);
+
         this.$store.dispatch('main/handleError', { key: 'error', value: true });
       }
     },
@@ -70,8 +74,6 @@ export default {
       this.setSelectedPost(post)
       this.$store.dispatch("main/setUpdateVisible", { key: "updateVisible", value: true });
     },
-
-
   },
   created() {
     this.showData()
